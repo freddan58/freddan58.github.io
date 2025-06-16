@@ -1,0 +1,10 @@
+title: Blog Técnico de Furbano
+description: Explorando Azure, .NET Core, Azure Functions, AKS y modernización de aplicaciones.
+baseurl: ""
+url: "https://furbano.github.io"
+theme: minima
+plugins:
+  - jekyll-feed
+author:
+  name: Furbano
+  email: tu-email@example.com
