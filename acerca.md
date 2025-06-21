@@ -10,9 +10,9 @@ permalink: /acerca/
 
 # Acerca de Mí
 
-Soy Freddy Urbano, un CEO y CTO experimentado con más de 20 años de experiencia en desarrollo de software, especializado en tecnologías Microsoft como Azure, .NET Core, Azure Functions, Azure Kubernetes Service (AKS) y modernización de aplicaciones. Como CEO de Soluciones Etech Corp, he impulsado el crecimiento sostenido y la innovación mediante la integración de tecnologías de vanguardia y el desarrollo de nuevas líneas de negocio. Además, como CTO de Digital Delivery Inc., lidero estrategias tecnológicas para optimizar procesos y mejorar la escalabilidad de plataformas.
+Soy Freddy Urbano, experimentado con más de 20 años de experiencia en desarrollo de software, especializado en tecnologías Microsoft como Azure, .NET Core, Azure Functions, Azure Kubernetes Service (AKS) y modernización de aplicaciones. He impulsado el crecimiento sostenido y la innovación mediante la integración de tecnologías de vanguardia y el desarrollo de nuevas líneas de negocio. Además, lidero estrategias tecnológicas para optimizar procesos y mejorar la escalabilidad de plataformas.
 
-Con una sólida experiencia en bases de datos (SQL Server, Oracle, PostgreSQL), lenguajes de programación (C#, Java, JavaScript) y prácticas DevOps, he liderado proyectos exitosos para clientes destacados, como el Tribunal Electoral de Panamá y Casa de Cambio Angulo López. Mis certificaciones como Scrum Master, Scrum Product Owner y Microsoft Certified Professional Developer refuerzan mi compromiso con la excelencia.
+Con una sólida experiencia en bases de datos (SQL Server, Oracle, PostgreSQL), lenguajes de programación (C#, Java, JavaScript) y prácticas DevOps, he liderado proyectos exitosos para clientes destacados en los sectores de gobierno, salud, retail, banca y finanazas.
 
 ## Mis Servicios
 
@@ -24,7 +24,7 @@ Con una sólida experiencia en bases de datos (SQL Server, Oracle, PostgreSQL), 
 
 ## Mi Objetivo
 
-Me apasiona compartir conocimiento y contribuir a la comunidad de Microsoft. Mi meta es convertirme en Microsoft MVP en Azure Application PaaS, inspirando y ayudando a otros a aprovechar Azure para alcanzar sus objetivos tecnológicos. A través de este blog, comparto tutoriales, ideas y mejores prácticas para apoyar a desarrolladores y empresas en su éxito.
+Me apasiona compartir conocimiento y contribuir a la comunidad de Microsoft. Mi meta es apoyarte en tu camino de transformación digital, inspirando y ayudando a otros a aprovechar Azure para alcanzar sus objetivos tecnológicos. A través de este blog, comparto tutoriales, ideas y mejores prácticas para apoyar a desarrolladores y empresas en su éxito.
 
 ## Contáctame
 
