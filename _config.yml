@@ -3,7 +3,7 @@ author:
   name: Freddy Urbano
   email: freddan58@gmail.com
 description: Explorando Azure, .NET Core, Azure Functions, AKS y modernización de aplicaciones.
-baseurl: "/furbano.github.io"
+baseurl: ""
 url: "https://freddan58.github.io"
 theme: minima
 
