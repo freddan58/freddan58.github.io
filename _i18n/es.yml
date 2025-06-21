@@ -1,0 +1,7 @@
+site:
+  title: Blog Técnico de Freddy Urbano
+  description: Explorando Azure, .NET Core, Azure Functions, AKS y modernización de aplicaciones.
+nav:
+  about: Acerca
+  contact: Contacto
+  home: Inicio
