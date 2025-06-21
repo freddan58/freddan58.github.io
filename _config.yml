@@ -31,8 +31,9 @@ minima:
   #   the `path` property (as represented via Liquid) of the pages in the order they
   #   should be rendered.
   nav_pages:
+    - index.md
     - acerca.md
-    - contact.md
+    - contacto.md
 
   # Set to `true` to show excerpts on the homepage.
   show_excerpts: false
@@ -66,3 +67,5 @@ defaults:
       path: "acerca.md"
     values:
       language: es
+
+google_analytics: GTM-5ZMNPSR4
