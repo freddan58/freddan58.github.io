@@ -93,14 +93,14 @@
 
 <h2 id="cómo-implementarlo">Cómo Implementarlo</h2>
 <h3 id="1-orquestador-principal">1. Orquestador Principal</h3>
-<p>El orquestador (<code class="language-plaintext highlighter-rouge">SendEmailOrchestrator</code>) obtiene los correos pendientes y los distribuye por cliente en paralelo.</p>
+<p>El orquestador (<code class="language-plaintext highlighter-rouge">SendEmailOrchestrator</code>) obtiene los correos pendientes desde endpoints configurables y los distribuye por cliente en paralelo, con monitoreo vía Application Insights.</p>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">Function</span><span class="p">(</span><span class="s">"SendEmailOrchestrator"</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;&gt;</span> <span class="nf">SendEmailOrchestrator</span><span class="p">(</span>
     <span class="p">[</span><span class="n">OrchestrationTrigger</span><span class="p">]</span> <span class="n">TaskOrchestrationContext</span> <span class="n">context</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">var</span> <span class="n">emails</span> <span class="p">=</span> <span class="k">await</span> <span class="n">context</span><span class="p">.</span><span class="n">CallActivityAsync</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Email</span><span class="p">&gt;&gt;(</span><span class="k">nameof</span><span class="p">(</span><span class="n">GetEmailsToSend</span><span class="p">),</span> <span class="k">null</span><span class="p">);</span>
     <span class="kt">var</span> <span class="n">distinctClients</span> <span class="p">=</span> <span class="n">emails</span><span class="p">.</span><span class="nf">GroupBy</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">SystemSerial</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">g</span> <span class="p">=&gt;</span> <span class="n">g</span><span class="p">.</span><span class="n">Key</span><span class="p">);</span>
-    <span class="kt">int</span> <span class="n">maxParallelClients</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span> <span class="c1">// Límite configurable</span>
+    <span class="kt">int</span> <span class="n">maxParallelClients</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">_configuration</span><span class="p">[</span><span class="s">"maxParallelClients"</span><span class="p">]</span> <span class="p">??</span> <span class="s">"5"</span><span class="p">);</span>
     <span class="kt">var</span> <span class="n">parallelTasks</span> <span class="p">=</span> <span class="n">distinctClients</span><span class="p">.</span><span class="nf">Take</span><span class="p">(</span><span class="n">maxParallelClients</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">client</span> <span class="p">=&gt;</span>
         <span class="n">context</span><span class="p">.</span><span class="nf">CallSubOrchestratorAsync</span><span class="p">(</span><span class="k">nameof</span><span class="p">(</span><span class="n">SendEmailsToClientOrchestrator</span><span class="p">),</span> <span class="k">new</span> <span class="p">{</span> <span class="n">ClientName</span> <span class="p">=</span> <span class="n">client</span><span class="p">,</span> <span class="n">Emails</span> <span class="p">=</span> <span class="n">emails</span> <span class="p">})</span>
     <span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
@@ -110,14 +110,14 @@
 </code></pre></div></div>
 
 <h3 id="2-suborquestador-por-cliente">2. Suborquestador por Cliente</h3>
-<p>Cada cliente tiene su propio suborquestador (<code class="language-plaintext highlighter-rouge">SendEmailsToClientOrchestrator</code>) que envía correos en lotes.</p>
+<p>Cada cliente tiene un suborquestador (<code class="language-plaintext highlighter-rouge">SendEmailsToClientOrchestrator</code>) que envía correos en lotes, manejando hasta <code class="language-plaintext highlighter-rouge">QtyEmails</code> por iteración.</p>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">Function</span><span class="p">(</span><span class="s">"SendEmailsToClientOrchestrator"</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">SendEmailsToClientOrchestrator</span><span class="p">(</span>
     <span class="p">[</span><span class="n">OrchestrationTrigger</span><span class="p">]</span> <span class="n">TaskOrchestrationContext</span> <span class="n">context</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">var</span> <span class="n">input</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">GetInput</span><span class="p">&lt;</span><span class="kt">dynamic</span><span class="p">&gt;();</span>
-    <span class="kt">var</span> <span class="n">clientEmails</span> <span class="p">=</span> <span class="n">input</span><span class="p">.</span><span class="n">Emails</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">SystemSerial</span> <span class="p">==</span> <span class="n">input</span><span class="p">.</span><span class="n">ClientName</span><span class="p">).</span><span class="nf">Take</span><span class="p">(</span><span class="m">5</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
-    <span class="kt">int</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="m">5</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">clientEmails</span> <span class="p">=</span> <span class="n">input</span><span class="p">.</span><span class="n">Emails</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">e</span> <span class="p">=&gt;</span> <span class="n">e</span><span class="p">.</span><span class="n">SystemSerial</span> <span class="p">==</span> <span class="n">input</span><span class="p">.</span><span class="n">ClientName</span><span class="p">).</span><span class="nf">Take</span><span class="p">(</span><span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">_configuration</span><span class="p">[</span><span class="s">"QtyEmails"</span><span class="p">]</span> <span class="p">??</span> <span class="s">"5"</span><span class="p">)).</span><span class="nf">ToList</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">batchSize</span> <span class="p">=</span> <span class="kt">int</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">_configuration</span><span class="p">[</span><span class="s">"batchSize"</span><span class="p">]</span> <span class="p">??</span> <span class="s">"5"</span><span class="p">);</span>
     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">clientEmails</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span> <span class="p">+=</span> <span class="n">batchSize</span><span class="p">)</span>
     <span class="p">{</span>
         <span class="kt">var</span> <span class="n">batch</span> <span class="p">=</span> <span class="n">clientEmails</span><span class="p">.</span><span class="nf">Skip</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="nf">Take</span><span class="p">(</span><span class="n">batchSize</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
@@ -128,49 +128,52 @@
 </code></pre></div></div>
 
 <h3 id="3-enviar-el-correo">3. Enviar el Correo</h3>
-<p>La actividad (<code class="language-plaintext highlighter-rouge">SendEmailHandler</code>) usa SMTP o una API (ej. Brevo) para el envío real.</p>
+<p>La actividad (<code class="language-plaintext highlighter-rouge">SendEmailHandler</code>) usa SMTP o la API de Brevo, con reintentos y telemetría para cada envío.</p>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">Function</span><span class="p">(</span><span class="s">"SendEmailHandler"</span><span class="p">)]</span>
 <span class="k">public</span> <span class="k">static</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">SendEmailHandler</span><span class="p">([</span><span class="n">ActivityTrigger</span><span class="p">]</span> <span class="n">Email</span> <span class="n">email</span><span class="p">,</span> <span class="n">FunctionContext</span> <span class="n">executionContext</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="kt">var</span> <span class="n">logger</span> <span class="p">=</span> <span class="n">executionContext</span><span class="p">.</span><span class="nf">GetLogger</span><span class="p">(</span><span class="s">"SendEmailHandler"</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(!</span><span class="n">email</span><span class="p">.</span><span class="nf">IsApiCall</span><span class="p">())</span>
     <span class="p">{</span>
-        <span class="k">await</span> <span class="nf">SendEmailAsync</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"Cuerpo del correo"</span><span class="p">,</span> <span class="n">logger</span><span class="p">);</span> <span class="c1">// SMTP</span>
+        <span class="k">await</span> <span class="nf">SendEmailAsync</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"Cuerpo del correo"</span><span class="p">,</span> <span class="n">logger</span><span class="p">);</span> <span class="c1">// SMTP con reintentos</span>
     <span class="p">}</span>
     <span class="k">else</span>
     <span class="p">{</span>
-        <span class="k">await</span> <span class="nf">SendBrevoEmailAsync</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"Cuerpo del correo"</span><span class="p">,</span> <span class="n">logger</span><span class="p">);</span> <span class="c1">// API</span>
+        <span class="k">await</span> <span class="nf">SendBrevoEmailAsync</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="s">"Cuerpo del correo"</span><span class="p">,</span> <span class="n">logger</span><span class="p">);</span> <span class="c1">// API Brevo</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h2 id="paralelismo-cómo-funciona">Paralelismo: Cómo Funciona</h2>
 <ul>
-  <li><strong>Por Cliente</strong>: El orquestador principal ejecuta hasta <code class="language-plaintext highlighter-rouge">maxParallelClients</code> suborquestadores en paralelo (ej. 5 clientes a la vez).</li>
-  <li><strong>Por Lote</strong>: Cada suborquestador envía correos en lotes de <code class="language-plaintext highlighter-rouge">batchSize</code> (ej. 5 correos por iteración).<br />
-Esto maximiza la eficiencia sin saturar el sistema. Ajusta estos valores según la carga y los recursos disponibles.</li>
+  <li><strong>Por Cliente</strong>: El orquestador ejecuta hasta <code class="language-plaintext highlighter-rouge">maxParallelClients</code> suborquestadores en paralelo (e.g., 5 clientes).</li>
+  <li><strong>Por Lote</strong>: Cada suborquestador procesa lotes de <code class="language-plaintext highlighter-rouge">batchSize</code> correos (e.g., 5 por iteración).<br />
+La configuración se lee de <code class="language-plaintext highlighter-rouge">servers.json</code> y variables de entorno, optimizando recursos según la carga.</li>
 </ul>
 
 <h2 id="limitaciones-a-tener-en-cuenta">Limitaciones a Tener en Cuenta</h2>
 <ul>
-  <li><strong>Tiempo de Ejecución</strong>: Las Durable Functions tienen un límite (configurable, pero finito). Si la orquestación tarda demasiado, falla.</li>
-  <li><strong>Escalabilidad</strong>: Aunque es serverless, hay un tope de instancias simultáneas. Demasiados clientes o correos pueden requerir ajustes.</li>
-  <li><strong>Latencia</strong>: El estado se guarda en almacenamiento duradero (ej. Azure Storage), lo que puede ralentizar operaciones masivas.<br />
-Para mitigar esto, optimiza lotes y controla el paralelismo.</li>
+  <li><strong>Tiempo de Ejecución</strong>: El límite por defecto es 5 minutos, extensible a 10 minutos con <code class="language-plaintext highlighter-rouge">functionTimeout</code>. Excederlo causa fallos.</li>
+  <li><strong>Escalabilidad</strong>: Hasta 200 instancias simultáneas por región; ajustar <code class="language-plaintext highlighter-rouge">maxParallelClients</code> evita saturación.</li>
+  <li><strong>Latencia</strong>: Almacenamiento duradero introduce retrasos; optimiza lotes y usa índices en <code class="language-plaintext highlighter-rouge">GetEmailsToSend</code>.</li>
+  <li><strong>Dependencias</strong>: Requiere endpoints externos funcionales y claves API válidas (e.g., Brevo).</li>
 </ul>
 
 <h2 id="por-qué-vale-la-pena">Por Qué Vale la Pena</h2>
-<p>Con este enfoque serverless eliminas servidores físicos, reduces costos y escalas según demanda. Ideal para organizaciones que quieren modernizar sin complicaciones.</p>
+<p>Con este enfoque serverless eliminas servidores físicos, reduces costos y escalas según demanda. La telemetría de Application Insights ayuda a diagnosticar problemas en tiempo real.</p>
 
 <h2 id="siguientes-pasos">Siguientes Pasos</h2>
 <ul>
-  <li>Añadir monitoreo con Application Insights.</li>
-  <li>Ajustar <code class="language-plaintext highlighter-rouge">maxParallelClients</code> y <code class="language-plaintext highlighter-rouge">batchSize</code> según tus necesidades.</li>
-  <li>Integrar con otras herramientas de Azure para más funcionalidades.</li>
+  <li>Ajustar <code class="language-plaintext highlighter-rouge">maxParallelClients</code> y <code class="language-plaintext highlighter-rouge">batchSize</code> según tu infraestructura.</li>
+  <li>Integrar autenticación en endpoints externos.</li>
+  <li>Explorar optimizaciones con Azure Monitor.</li>
 </ul>
 
+<h2 id="código-fuente-completo">Código Fuente Completo</h2>
+<p>Visita el repositorio <a href="https://github.com/freddan58/AzureDurableEmailOrchestration">AzureDurableEmailOrchestration</a> para ver el código completo, incluyendo manejo de errores, telemetría y configuraciones.</p>
+
 <h2 id="comparte-tu-experiencia">¡Comparte tu Experiencia!</h2>
-<p>¿Has implementado algo similar con Azure Durable Functions? ¿Tienes preguntas o sugerencias sobre este enfoque? ¡Déjame un comentario abajo! Me encantaría saber tu opinión y aprender de tus experiencias.</p>
+<p>¿Has implementado algo similar con Azure Durable Functions? ¿Tienes preguntas o sugerencias? ¡Déjame un comentario abajo! Me encantaría saber tu opinión y aprender de tus experiencias.</p>
 
 <p>También puedes seguirme en <a href="https://github.com/freddan58">GitHub</a> o <a href="https://x.com/freddan58">X</a> para más contenido sobre Azure y serverless.</p>
 
