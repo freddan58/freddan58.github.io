@@ -4,3 +4,25 @@
   1. Head over to https://realfavicongenerator.net/ to add your own favicons.
   2. Customize default _includes/custom-head.html in your source directory and insert the given code snippet.
 {% endcomment %}
+{%- comment -%} OG/Twitter a partir de cover_image del post {%- endcomment -%}
+{%- assign ogtitle = page.title | default: site.title -%}
+{%- assign ogdesc  = page.description | default: page.excerpt | default: site.description -%}
+{%- assign ogimage = page.cover_image | default: page.image | default: site.logo -%}
+
+<meta property="og:title" content="{{ ogtitle | escape }}">
+{%- if ogdesc -%}
+<meta property="og:description" content="{{ ogdesc | strip_newlines | strip | truncate: 300 | escape }}">
+{%- endif -%}
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+
+{%- if page.layout == 'post' or page.collection == 'posts' -%}
+<meta property="og:type" content="article">
+{%- else -%}
+<meta property="og:type" content="website">
+{%- endif -%}
+
+{%- if ogimage -%}
+<meta property="og:image" content="{{ ogimage | absolute_url }}">
+<meta property="og:image:alt" content="{{ ogtitle | escape }}">
+<meta name="twitter:card" content="summary_large_image">
+{%- endif -%}
