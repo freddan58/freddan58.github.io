@@ -5,7 +5,7 @@ date: 2025-08-19
 categories: [blog]
 tags: Siri robot Apple,polinización robótica en agricultura,cirugía autónoma con IA,reconstrucción tras incendios con robots,Juegos Mundiales de Robots Humanoides,gafas inteligentes HTC Vive Eagle,robots humanoides China,robot quirúrgico Johns Hopkins,tecnología IA en hogares,tendencias en robótica 2025
 description: "Descubre los avances en inteligencia artificial y robótica 2025 que están transformando hogares, agricultura y medicina. Conoce cómo impactan tu presente."
-cover_image: "=https://cloudfront-us-east-1.images.arcpublishing.com/prisachile/CDXWSQEAMBEWJOFNEEIIHMV7VY.jpg"
+cover_image: "https://cloudfront-us-east-1.images.arcpublishing.com/prisachile/CDXWSQEAMBEWJOFNEEIIHMV7VY.jpg"
 ---
 {% if page.cover_image %}![{{ page.title }}]({{ page.cover_image }}){% endif %}
 
