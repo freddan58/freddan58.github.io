@@ -16,7 +16,7 @@ cover_image: "https://www.dineroenimagen.com/media/dinero/styles/original/public
 
 ### 1. Introducción: El impacto de Copilot e inteligencia artificial en .NET
 
-El mundo del desarrollo en .NET ha sido transformado recientemente por la revolución de Copilot e inteligencia artificial. Gracias a la incorporación de herramientas de IA, los desarrolladores han podido automatizar tareas, mejorar la calidad del código y acelerar los tiempos de entrega (Fuente: [enlace](http://example.com)). Esta guía pretende responder a la creciente demanda de información sobre cómo sacar el mayor provecho posible a estas herramientas en escenarios reales de desarrollo con .NET. En ella, desglosaremos modelos, configuraciones, plantillas y mejores prácticas para ayudarte a maximizar el uso de Copilot e inteligencia artificial en .NET.
+El mundo del desarrollo en .NET ha sido transformado recientemente por la revolución de Copilot e inteligencia artificial. Gracias a la incorporación de herramientas de IA, los desarrolladores han podido automatizar tareas, mejorar la calidad del código y acelerar los tiempos de entrega (Fuente: [GitHub Copilot](https://github.com/features/copilot)). Esta guía pretende responder a la creciente demanda de información sobre cómo sacar el mayor provecho posible a estas herramientas en escenarios reales de desarrollo con .NET. En ella, desglosaremos modelos, configuraciones, plantillas y mejores prácticas para ayudarte a maximizar el uso de Copilot e inteligencia artificial en .NET.
 
 ### 2. Panorama actual de la IA en .NET y Visual Studio Code
 
@@ -24,7 +24,7 @@ La inteligencia artificial en el desarrollo .NET ha sufrido una rápida evoluci�
 
 ### 3. Copilot en el ecosistema .NET: primeros pasos y ventajas
 
-Para comenzar a beneficiarte de todo lo que Copilot e inteligencia artificial en .NET tiene para ofrecer, el primer paso es integrar Copilot en tu entorno de desarrollo con VS Code o Visual Studio. Con Copilot, podrás automatizar la generación de código, simplificar tareas repetitivas, recibir sugerencias de mejores prácticas y mucho más. Esta herramienta se ha convertido en una aliada indispensable para los desarrolladores, brindando soporte para la generación de código, documentación, tests y más, todo esto basándose en las experiencias de otros desarrolladores que se encuentran en la misma situación que tú (Fuente: [enlace](http://example.com)).
+Para comenzar a beneficiarte de todo lo que Copilot e inteligencia artificial en .NET tiene para ofrecer, el primer paso es integrar Copilot en tu entorno de desarrollo con VS Code o Visual Studio. Con Copilot, podrás automatizar la generación de código, simplificar tareas repetitivas, recibir sugerencias de mejores prácticas y mucho más. Esta herramienta se ha convertido en una aliada indispensable para los desarrolladores, brindando soporte para la generación de código, documentación, tests y más, todo esto basándose en las experiencias de otros desarrolladores que se encuentran en la misma situación que tú (Fuente: [Documentación de GitHub Copilot](https://docs.github.com/en/copilot)).
 
 ### 4. Comparativa de modelos: GPT-4.1 vs GPT-5 Mini en Copilot
 
@@ -52,19 +52,19 @@ En los últimos tiempos, el desarrollo de la IA en el ecosistema .NET ha dado un
 Una de estas innovaciones son los **modos de chat**. Estos modos te permiten crear acciones especializadas para tareas concretas. Por ejemplo, podrías crear un modo de chat llamado "C# Janitor", diseñado para ayudarte a realizar una limpieza a fondo del código legacy.
 
 El asistente **.NET AI Assistant** y las **plantillas de IA para .NET** representan otros avances importantes. El AI Assistant proporciona una variedad de funciones de IA accesibles directamente desde tu línea de comandos. Por su parte, las plantillas de IA para .NET permiten generar recursos rápidos para tu proyecto - como un chatbot RAG embebido - con un simple comando: `dotnet new --install ...`.  
-*(Fuente: [enlace](http://example.com))*
+*(Fuente: [Plantillas de IA para .NET (Quickstart)](https://learn.microsoft.com/en-us/dotnet/ai/quickstarts/ai-templates))*
 
 Finalmente, los **MCP servers .NET** son otra tendencia emergente en la integración IA en proyectos .NET. Estos servidores actúan como intermediarios entre las aplicaciones y los modelos de IA, expandiendo las capacidades de las aplicaciones de .NET para manejar tareas complejas de IA. Los MCP servers, como el Upgrade Assistant, se están integrando en los proyectos para llevar las experiencias de IA a un nuevo nivel.  
-*(Fuente: [enlace](http://example.com))*
+*(Fuente: [Crear un MCP server minimal y publicarlo en NuGet (.NET)](https://learn.microsoft.com/en-us/dotnet/ai/quickstarts/build-mcp-server))*
 
 ### 8. Recursos recomendados y próximos pasos
 
 A medida que exploras cómo sacar el máximo provecho de Copilot e inteligencia artificial en .NET, debes tener en cuenta algunos recursos útiles:
 
-- Repositorio "awesome-copilot”: Aquí encontrarás varios ejemplos que puedes utilizar como punto de partida para construir tus propias instrucciones de copilot. *(Fuente: [enlace](http://example.com))*
-- Plantillas de IA para .NET: Estas plantillas son una excelente manera de empezar a integrar la IA en tu trabajo. *(Fuente: [enlace](http://example.com))*
-- Paquetes NuGet para MCP servers: Los paquetes recomendados pueden ayudarte a empezar con los MCP servers y a integrarlos eficientemente en tus proyectos .NET. *(Fuente: [enlace](http://example.com))*
-- Artículos recomendados: Por ejemplo, este artículo sobre los 10 principales MCP servers .NET es un recurso informativo particularmente útil. *(Fuente: [enlace](http://example.com))*
+- Repositorio "awesome-copilot”: Aquí encontrarás varios ejemplos que puedes utilizar como punto de partida para construir tus propias instrucciones de copilot. *(Fuente: [github.com/github/awesome-copilot](https://github.com/github/awesome-copilot))*
+- Plantillas de IA para .NET: Estas plantillas son una excelente manera de empezar a integrar la IA en tu trabajo. *(Fuente: [Quickstart de plantillas .NET AI](https://learn.microsoft.com/en-us/dotnet/ai/quickstarts/ai-templates))*
+- Paquetes NuGet para MCP servers: Los paquetes recomendados pueden ayudarte a empezar con los MCP servers y a integrarlos eficientemente en tus proyectos .NET. *(Fuente: [ModelContextProtocol (NuGet)](https://www.nuget.org/packages/ModelContextProtocol))*
+- Artículos recomendados: Por ejemplo, este artículo sobre MCP en C# es un recurso informativo particularmente útil. *(Fuente: [Practical Guide to MCP Server Development (C# Edition)](https://allmcp.org/blogs/mcp-server-csharp-guide))*
 
 Experimenta con diferentes modelos, instrucciones y herramientas para ver cómo responden a tus necesidades de desarrollo. Mantente atento a nuestros próximos artículos y episodios que se centrarán en temas innovadores como OpenRouter y nuevas integraciones.
 
